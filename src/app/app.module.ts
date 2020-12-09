@@ -5,4 +5,5 @@
 
 import './app.component';
 import './dashboard/dashboard.component';
-import './manage-customer/manage-customer.component';
+import './manage-customers/manage-customers.component';
+import './manage-items/manage-items.component'

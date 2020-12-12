@@ -10,7 +10,7 @@ export function getAllCustomers(): Promise<Array<Customer>> {
 
         if (!loaded) {
 
-            // (1) Initiate a XMLHttpRequest
+            /* // (1) Initiate a XMLHttpRequest
             let http = new XMLHttpRequest();
 
             // (2) Setting up the call back function
@@ -40,7 +40,18 @@ export function getAllCustomers(): Promise<Array<Customer>> {
 
             // (4) If we have to set headers
             // (5)
-            http.send();
+            http.send(); */
+
+            $.ajax({
+                method: "GET",
+                url: 'http://localhost:8080/pos/customers'
+            }).then((data)=>{
+                customers = data;
+                loaded = true;
+                resolve(customers);
+            }).fail(()=>{
+                reject();
+            })
 
         }else{
             resolve(customers);
@@ -49,20 +60,20 @@ export function getAllCustomers(): Promise<Array<Customer>> {
     });
 }
 
-export function saveCustomer(customer: Customer): Promise<boolean> {
+export function saveCustomer(customer: Customer): Promise<void> {
 
     return new Promise((resolve, reject) => {
 
-        let http = new XMLHttpRequest();
+/*         let http = new XMLHttpRequest();
 
         http.onreadystatechange = () => {
             if (http.readyState == 4) {
-                let success = JSON.parse(http.responseText);
-                if (success) {
-                    customers.unshift(customer);
-                    console.log(customers);
-                }
-                resolve(success);
+                if (http.status == 201){
+                    customers.push(customer);
+                    resolve();
+                }else{
+                    reject();    
+                } 
             }
         };
 
@@ -70,8 +81,53 @@ export function saveCustomer(customer: Customer): Promise<boolean> {
 
         http.setRequestHeader('Content-Type', 'application/json');
 
-        http.send(JSON.stringify(customer));
+        http.send(JSON.stringify(customer)); */
+
+        $.ajax({
+            method: 'POST',
+            url: 'http://localhost:8080/pos/customers',
+            contentType: 'application/json',
+            data: JSON.stringify(customer)
+        }).then(()=>{
+            customers.push(customer);
+            resolve();
+        }).fail(()=>{
+            reject();
+        })
 
     });
 
+}
+
+export function deleteCustomer(id: string): Promise<void>{
+    return new Promise((resolve, reject)=>{
+        
+/*         let http = new XMLHttpRequest();
+
+        http.onreadystatechange = () => {
+            if (http.readyState == 4) {
+                if (http.status == 204){
+                    customers.splice(customers.findIndex((elm)=>elm.id===id),1);
+                    resolve();
+                }else{
+                    reject();    
+                } 
+            }
+        };
+
+        http.open('DELETE', `http://localhost:8080/pos/customers?id=${id}`, true);
+
+        http.send(); */
+
+        $.ajax({
+            method: "DELETE",
+            url: `http://localhost:8080/pos/customers?id=${id}`
+        }).then(()=>{
+            customers.splice(customers.findIndex((elm)=>elm.id===id),1);
+            resolve(); 
+        }).catch(()=>{
+            reject();
+        })
+
+    });
 }

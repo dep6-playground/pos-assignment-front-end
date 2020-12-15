@@ -9,7 +9,7 @@ import '../../../node_modules/admin-lte/plugins/datatables/jquery.dataTables.min
 import '../../../node_modules/admin-lte/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js';
 import '../../../node_modules/admin-lte/plugins/datatables-responsive/js/dataTables.responsive.min.js';
 import '../../../node_modules/admin-lte/plugins/datatables-responsive/js/responsive.bootstrap4.min.js';
-import { deleteCustomer, getAllCustomers, saveCustomer } from '../service/customer.service';
+import { deleteCustomer, getAllCustomers, saveCustomer,customers, updateCustomer } from '../service/customer.service';
 import { Customer } from '../model/customer';
 import { data } from 'jquery';
 
@@ -82,6 +82,14 @@ async function loadAllCustomers() {
     });
 
     dataTable.page(Math.ceil(customers.length / 5)-1).draw(false);
+
+    $('#tbl-customers tbody').find('tr').each((index,elm)=>{
+        $(elm).click(()=>{
+            $('#txt-id').val(($($(elm).find('td')[0]).text())); 
+            $('#txt-name').val(($($(elm).find('td')[1]).text())); 
+            $('#txt-address').val(($($(elm).find('td')[2]).text())); 
+        })
+    });
 }
 
 loadAllCustomers();
@@ -92,20 +100,47 @@ $("#btn-save").click(async () => {
     let name = <string>$("#txt-name").val();
     let address = <string>$("#txt-address").val();
 
+    let anUpdate:boolean = false;
+
+    for(let i=0; i<customers.length; i++){
+        if (id==customers[i].id){
+            anUpdate=true;
+            break;
+        }
+    }
+
     /* Font-end validation */
     if (!id.match(/^C\d{3}$/) || name.trim().length === 0 || address.trim().length === 0) {
         alert("Invalid cutomer infromation");
         return;
     }
 
-    try {
-        await saveCustomer(new Customer(id, name, address));
-        alert("Customer Saved");
-        loadAllCustomers();
-    } catch (error) {
-        alert("Failed to save the customer");
+
+    if(anUpdate){
+        try {
+            await updateCustomer(id);
+            alert("Customer Updated");
+            console.log(customers);
+            loadAllCustomers();
+        } catch (error) {
+            alert("Failed to save the customer");
+        }
     }
+    else{
+        try {
+            await saveCustomer(new Customer(id, name, address));
+            alert("Customer Saved");
+            loadAllCustomers();
+        } catch (error) {
+            alert("Failed to save the customer");
+        }
+
+     }
+
+    
 });
+
+
 
 
 

@@ -1,6 +1,6 @@
 import { Customer } from "../model/customer";
 
-let customers: Array<Customer> = [];
+export let customers: Array<Customer> = [];
 let loaded = false;
 
 export function getAllCustomers(): Promise<Array<Customer>> {
@@ -44,7 +44,7 @@ export function getAllCustomers(): Promise<Array<Customer>> {
 
             $.ajax({
                 method: "GET",
-                url: 'http://localhost:8080/pos/customers'
+                url: 'http://localhost:8080/myapp/customers'
             }).then((data)=>{
                 customers = data;
                 loaded = true;
@@ -85,7 +85,7 @@ export function saveCustomer(customer: Customer): Promise<void> {
 
         $.ajax({
             method: 'POST',
-            url: 'http://localhost:8080/pos/customers',
+            url: 'http://localhost:8080/myapp/customers',
             contentType: 'application/json',
             data: JSON.stringify(customer)
         }).then(()=>{
@@ -121,7 +121,7 @@ export function deleteCustomer(id: string): Promise<void>{
 
         $.ajax({
             method: "DELETE",
-            url: `http://localhost:8080/pos/customers?id=${id}`
+            url: `http://localhost:8080/myapp/customers?id=${id}`
         }).then(()=>{
             customers.splice(customers.findIndex((elm)=>elm.id===id),1);
             resolve(); 
@@ -130,4 +130,55 @@ export function deleteCustomer(id: string): Promise<void>{
         })
 
     });
+}
+
+export function updateCustomer(id: String):Promise<void>{
+
+    return new Promise((resolve,reject)=>{
+        /* let http = new XMLHttpRequest();
+
+        http.onreadystatechange = () =>{
+            if(http.readyState ==4){
+                let success = JSON.parse(http.responseText);
+                /* if(success){
+                    customers.unshift(customer);
+                } *//*
+                resolve(success);
+            }
+
+        };
+
+        http.open('PUT','http://localhost:8080/myapp/customers',true);
+
+        http.setRequestHeader('Content-Type','application/json');
+
+        http.send(JSON.stringify(customer)); */
+        
+
+        $.ajax({
+            method: "PUT",
+            url: `http://localhost:8080/myapp/customers?id=${id}`,
+            data: JSON.stringify({
+                id:null,
+                name : $('#txt-name').val(),
+                address : $('#txt-address').val()
+            })
+        }).then(()=>{
+            for(let i=0; i<customers.length;i++){
+                if (id===customers[i].id){
+                    customers[i].name  = $('#txt-name').val() as string;
+                    customers[i].address = $('#txt-address').val() as string;
+                }
+            }
+            resolve(); 
+        }).catch(()=>{
+            reject();
+        })
+
+
+
+    })
+    
+
+    
 }

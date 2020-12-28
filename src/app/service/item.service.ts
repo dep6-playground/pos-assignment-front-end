@@ -1,36 +1,97 @@
 import { Item } from "../model/item";
 
-let items: Array<Item> = [];
+export let items: Array<Item> = [];
+let loaded = false;
 
 export function getAllItems(): Promise<Array<Item>> {
+    // To-do: retrive data from backend and fill the customers array
 
     return new Promise((resolve, reject) => {
 
-        // (1) Initiate a XMLHttpRequest
-        let http = new XMLHttpRequest();
+        if (!loaded) {
 
-        // (2) Setting up the call back function
-        http.onreadystatechange = function () {
-            if (http.readyState === 4) {
-                // let dom = $(http.responseXML as any);
-                // $(dom).find("item").each((index, elm) => {
-                //     let code = $(elm).find("code").text();
-                //     let description = $(elm).find("description").text();
-                //     let unitPrice = $(elm).find("unit-price").text();
-                //     let qtyOnHand = $(elm).find("qty-on-hand").text();
-                //     items.push(new Item(code, description, +unitPrice, +qtyOnHand));
-                // });
-                resolve(items = JSON.parse(http.responseText));
-            }
+            $.ajax({
+                method: "GET",
+                url: 'http://localhost:8080/myapp/items'
+            }).then((data)=>{
+                items = data;
+                loaded = true;
+                resolve(items);
+            }).fail(()=>{
+                reject();
+            })
+
+        }else{
+            resolve(items);
         }
 
-        // (3) Let's open the request
-        http.open('GET', 'http://localhost:8080/pos/items', true);
+    });
+}
 
-        // (4) If we have to set headers
+export function saveItem(item: Item): Promise<void> {
 
-        // (5)
-        http.send();
+    return new Promise((resolve, reject) => {
+
+        $.ajax({
+            method: 'POST',
+            url: 'http://localhost:8080/myapp/items',
+            contentType: 'application/json',
+            data: JSON.stringify(item)
+        }).then(()=>{
+            items.push(item);
+            resolve();
+        }).fail(()=>{
+            reject();
+        })
 
     });
+
+}
+
+export function deleteItem(code: string): Promise<void>{
+    return new Promise((resolve, reject)=>{
+
+        $.ajax({
+            method: "DELETE",
+            url: `http://localhost:8080/myapp/items?code=${code}`
+        }).then(()=>{
+            items.splice(items.findIndex((elm)=>elm.code===code),1);
+            resolve(); 
+        }).catch(()=>{
+            reject();
+        })
+
+    });
+}
+
+export function updateItem(code: String):Promise<void>{
+
+    return new Promise((resolve,reject)=>{
+
+        $.ajax({
+            method: "PUT",
+            url: `http://localhost:8080/myapp/items?code=${code}`,
+            data: JSON.stringify({
+/*                 code:null,
+ */                description : $('#txt-description').val(),
+                qtyOnHand : $('#txt-qty').val(),
+                unitPrice : $('#txt-unitPrice').val()
+            })
+        }).then(()=>{
+            for(let i=0; i<items.length;i++){
+                if (code===items[i].code){
+                    items[i].description  = $('#txt-description').val() as string;
+                    items[i].qtyOnHand  = $('#txt-qty').val() as string;
+                    items[i].unitPrice = $('#txt-unitPrice').val() as string;
+                }
+            }
+            resolve(); 
+        }).catch(()=>{
+            reject();
+        })
+
+
+    })
+
+    
 }

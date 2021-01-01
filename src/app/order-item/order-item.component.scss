@@ -1,0 +1,28 @@
+/**
+ * @author : Ranjith Suranga <suranga@ijse.lk>
+ * @since : 11/26/20
+**/
+
+#order-item {
+    /* #tbl-order-items th:first-child,
+    #tbl-order-items td:first-child {
+        width: 80px;
+        text-align: center;
+    }
+    #tbl-order-items th:nth-child(3),
+    #tbl-order-items td:nth-child(3) {
+        width: 60px;
+        text-align: center;
+    }
+    #tbl-order-items th:last-child,
+    #tbl-order-items td:last-child {
+        width: 50px;
+        text-align: center;
+    } */
+    .card {
+        height: 100%;
+    }
+    .pagination {
+        justify-content: flex-end;
+    }
+}

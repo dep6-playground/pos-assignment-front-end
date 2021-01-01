@@ -29,5 +29,8 @@ $("#app .sidebar ul li a").click(function () {
         case "Manage Items":
             $("#manage-items").show();
             break;
+        case "Place Orders":
+            $("#order-item").show();
+            break;
     }
 });

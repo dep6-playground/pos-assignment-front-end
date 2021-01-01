@@ -1,0 +1,116 @@
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1 class="m-0 text-dark">Place Your Orders!</h1>
+                </div>
+                <!-- /.col -->
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                        <li class="breadcrumb-item active">Place Orders</li>
+                    </ol>
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <!-- Main row -->
+            <div class="row" style="margin-bottom: 20px;">
+                <div class="col-12 col-lg-6">
+                    <div class="card card-primary">
+                        <div class="card-header">
+                            <h3 class="card-title">Order Information</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <!-- form start -->
+                        <form role="form">
+                            <div class="row">
+                                <div class="card-body col-sm-6">
+                                    <div class="form-group">
+                                        <label for="txt-code">Customer ID</label>
+                                        <select name="customers" id="customers-list">
+                                            <option disabled selected value> -- select customer -- </option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="txt-name">Name</label>
+                                        <input type="text" class="form-control" id="txt-name1">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="txt-address">Address</label>
+                                        <input type="text" class="form-control mb-5" id="txt-address1">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <button id="btn-add" type="button" class="btn btn-primary">Add to cart!</button>
+                                        <button type="reset" class="btn btn-warning">Clear</button>
+                                    </div>
+                                </div>
+                                <div class="card-body col-sm-6">
+                                    <div class="form-group">
+                                        <label for="txt-code">Item Code</label>
+                                        <select name="items" id="items-list">
+                                            <option disabled selected value> -- select item -- </option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="txt-description">Description</label>
+                                        <input type="text" class="form-control" id="txt-description1">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="txt-qty">Unit Price</label>
+                                        <input type="text" class="form-control" id="txt-unitPrice1">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="txt-unitPrice">Quantity</label>
+                                        <input type="text" class="form-control" id="txt-qty1" placeholder="Enter the quantity">
+                                    </div>
+
+                                </div>
+                            </div>
+                            <!-- /.card-body -->
+                        </form>
+                    </div>
+                    <!-- /.card -->
+                </div>
+                <div class="col-12 col-lg-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <table id="tbl-order-items" class="table table-bordered table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Order ID</th>
+                                        <th>Customer ID</th>
+                                        <th>Item Code</th>
+                                        <th>Quantity</th>
+                                        <th>Unit Price</th>
+                                        <th>Sub Total</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                </div>
+            </div>
+            <!-- /.row (main row) -->
+        </div>
+        <!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->

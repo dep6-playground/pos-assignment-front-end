@@ -4,11 +4,14 @@ import '../../../node_modules/admin-lte/plugins/datatables/jquery.dataTables.min
 import '../../../node_modules/admin-lte/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js';
 import '../../../node_modules/admin-lte/plugins/datatables-responsive/js/dataTables.responsive.min.js';
 import '../../../node_modules/admin-lte/plugins/datatables-responsive/js/responsive.bootstrap4.min.js';
-import { getAllOrderItems,orderItems,deleteOrderItem, saveOrderItem } from '../service/place-order.service';
-import { getAllCustomers,customers } from '../service/customer.service';
-import { getAllItems,items} from '../service/item.service';
+import { getAllOrderItems,deleteOrderItem, saveOrderItem } from '../service/place-order.service';
+import { getAllCustomers } from '../service/customer.service';
+import { getAllItems} from '../service/item.service';
 import { OrderItem } from '../model/order-item';
+import { saveOrder } from '../service/order.service';
+import {getAllOrders} from '../service/order.service'
 
+let orderID = 'O001';
 
 $("app-order-item").replaceWith('<div id="order-item">' + orderItem + '</div>');
 var html = '<style>' + style + '</style>';
@@ -25,6 +28,11 @@ $("#tbl-order-items tbody").on('click', 'tr .fas', async (event: Event)=>{
         alert("Failed to delete the Order Item");
     }
 });
+
+$('#tbl-order-items tbody .fas').on('mousemove',async function(){
+    alert('hutta');
+})
+
 
 $('#customers-list').on('change',async function(){
     let customers=await getAllCustomers();
@@ -110,7 +118,7 @@ function isNumber(value: string | number): boolean
 
 $("#btn-add").click(async () => {
 
-    let orderId='O001';
+    let orderId=orderID;
     let customerId = <string>$("#customers-list").val();
     let itemCode = <string>$("#items-list").val();
     let unitPrice = <string>$("#txt-unitPrice1").val();
@@ -134,6 +142,55 @@ $("#btn-add").click(async () => {
 
     
 });
+
+$("#btn-place").click(async () => {
+
+    let orderId=orderID;
+    let customerId = <string>$($($("#tbl-order-items tbody").find('tr')[0]).find('td')[1]).text();
+
+    try {
+        await saveOrder(orderId,customerId);
+        alert("Order Placed");
+        let orders = await getAllOrders();
+
+        if (dataTable) {
+            ($("#tbl-orders") as any).DataTable().destroy();
+            $("#tbl-orders tbody tr").remove();
+        }
+
+        for (const order of orders) {
+            $("#tbl-orders tbody").append(`
+                <tr>
+                    <td>${order.orderId}</td>
+                    <td>${order.customerId}</td>
+                    <td>${order.orderTotal}</td>
+                    <td><i class="fas fa-trash"></i></td>
+                </tr>
+            `);
+        }
+    
+        dataTable = ($("#tbl-orders") as any).DataTable({
+            "info": false,
+            "searching": false,
+            "lengthChange": false,
+            "pageLength": 5,
+            "ordering": false,
+        });
+
+        dataTable.page(Math.ceil(orders.length / 5)-1).draw(false);
+        
+        window.location.reload();
+    } catch (error) {
+        alert("Failed to place the Order");
+    }
+
+
+
+
+    
+});
+
+
 
 
 
